@@ -132,5 +132,19 @@ case: (x == 0%N :> nat).
 Qed.
 
 
+(** Proof that the determinant of A = -2 **)
+Definition det_eval:
+  \det A =(-2)%Re.
+Proof.
+(** Expanding the determinant about column 0 **)
+rewrite (@expand_det_col _ _  A 0)//=.
+rewrite !big_ord_recr //= big_ord0 add0r !mxE //=.
+rewrite /cofactor !det_mx11 !mxE//=.
+(** rewrite / is same as unfold **)
+rewrite !addn0 expr0 expr1 !mul1r.
+rewrite -!RmultE -!RplusE . 
+assert ((3 * (-1 * 2))%Re = (-6)%Re).
+{ nra. } rewrite H. nra.
+Qed.
 
 
