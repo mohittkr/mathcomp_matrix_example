@@ -94,5 +94,43 @@ rewrite big_ord0 //=.
 rewrite add0r !mxE //=.
 Qed.
 
+(** Define a column vector v = [1; 2] **)
+(** The col function defines a column vector.
+  Similary, row function defines a row vector.
+**)
+Definition v := \col_(i< 2) 
+    if (i == 0%N :> nat) then 1%Re else 2%Re.
+
+Definition result := \col_(i< 2) 
+    if (i == 0%N :> nat) then 5%Re else 11%Re.
+
+
+(** Prove that A * v = res **)
+Lemma matrix_vec_mul:
+  A *m v = result.
+Proof.
+(** Get term by term equality. **)
+apply matrixP. unfold eqrel. intros.
+rewrite !mxE //=.
+(** Another power feature of mathcomp is that
+  we can compose multiple lemmas in a single rewrite
+  command
+**)
+rewrite !big_ord_recr //= big_ord0 add0r !mxE //=.
+case: (x == 0%N :> nat).
++ by rewrite mulr1. (** mulr1 : x * 1 = x **)
+  (** The by tactical closes the proof by evaluating 
+    trivial operations. **)
++ rewrite mulr1.
+  (** In this case I use the reflection lemma between
+    ssralg mult and real mult; ssralg add and real add, 
+    as defined in the Rstruct file. Now, all operations 
+    are in standard real scope. So we cas use the simplifier
+    nra to solve the goal
+  **)
+  rewrite -!RmultE -!RplusE. nra.
+Qed.
+
+
 
 
